@@ -3,17 +3,18 @@ package database
 import (
 	"fmt"
 	"log"
+	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 var (
-	host	 = "localhost"
-	port	 = "3306"
-	user	 = "root"
-	password = "root"
-	dbname	 = "prakerja"
+	host	 = os.Getenv("DATABASE_HOST")
+	port	 = os.Getenv("DATABASE_PORT")
+	user	 = os.Getenv("DATABASE_USER")
+	password = os.Getenv("DATABASE_PASSWORD")
+	dbname	 = os.Getenv("DATABASE_NAME")
 	db *gorm.DB
 	err error
 )
