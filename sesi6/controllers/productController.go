@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
 func GetProducts(c *gin.Context) {
 	products := models.GetProducts()
 	c.JSON(http.StatusOK, gin.H{
@@ -28,9 +29,16 @@ func GetProduct(c *gin.Context) {
 	})
 }
 
-
 func CreateProduct(c *gin.Context) {
-	var body models.Product = c.MustGet("body").(models.Product)
+	var body models.Product
+
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+			"status": "error",
+		})
+		return
+	}
 
 	product := models.CreateProduct(body)
 
@@ -44,17 +52,20 @@ func UpdateProduct(c *gin.Context) {
 	id := c.Param("id")
 	idInt, _ := strconv.Atoi(id)
 
-	var body models.Product = c.MustGet("body").(models.Product)
+	var body models.Product
 
-	product := models.GetProduct(idInt)
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
 
-	product.Name = body.Name
-	product.Price = body.Price
-
-	models.UpdateProduct(product)
+	product := models.UpdateProduct(idInt, body)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("Update Product with id %s", id),
+		"product": product,
 	})
 }
 

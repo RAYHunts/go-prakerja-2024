@@ -37,12 +37,15 @@ func CreateProduct(product Product) Product {
 	return product
 }
 
-func UpdateProduct(product Product) Product {
-	result := database.GetDB().Save(&product)
+func UpdateProduct(id int, product Product) Product {
+	result := database.GetDB().Model(&Product{}).Where("id = ?", id).Updates(product)
 	if result.Error != nil {
 		log.Fatal(result.Error)
 	}
-	return product
+
+	updatedProduct := GetProduct(id)
+
+	return updatedProduct
 }
 
 func DeleteProduct(id int) {
