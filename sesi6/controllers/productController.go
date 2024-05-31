@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"sesi6/models"
 
@@ -11,7 +12,6 @@ import (
 
 func GetProducts(c *gin.Context) {
 	products := models.GetProducts()
-	log(products)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Get Products",
 		"products": products,
@@ -19,22 +19,40 @@ func GetProducts(c *gin.Context) {
 }
 
 func GetProduct(c *gin.Context) {
+	id := c.Param("id")
+	idInt, _ := strconv.Atoi(id)
+	product := models.GetProduct(idInt)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Get Product",
+		"product": product,
 	})
 }
 
 
 func CreateProduct(c *gin.Context) {
+	var body models.Product = c.MustGet("body").(models.Product)
+
+	product := models.CreateProduct(body)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Create Product",
+		"product": product,
 	})
 }
 
 func UpdateProduct(c *gin.Context) {
-
 	id := c.Param("id")
+	idInt, _ := strconv.Atoi(id)
+
+	var body models.Product = c.MustGet("body").(models.Product)
+
+	product := models.GetProduct(idInt)
+
+	product.Name = body.Name
+	product.Price = body.Price
+
+	models.UpdateProduct(product)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("Update Product with id %s", id),
 	})
@@ -43,6 +61,11 @@ func UpdateProduct(c *gin.Context) {
 func DeleteProduct(c *gin.Context) {
 
 	id := c.Param("id")
+
+	idInt, _ := strconv.Atoi(id)
+
+	models.DeleteProduct(idInt)
+
 	c.JSON(http.StatusOK, gin.H{
 		"message": fmt.Sprintf("Delete Product with id %s", id),
 	})
