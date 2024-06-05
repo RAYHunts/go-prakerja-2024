@@ -8,9 +8,13 @@ import (
 )
 
 type User struct {
-	Id       uint   `json:"id" gorm:"column:id;primaryKey;autoIncrement"`
-	Email    string `json:"email" gorm:"column:email"`
-	Password string `json:"password" gorm:"column:password"`
+	Id 	  uint   `json:"id" gorm:"column:id;primaryKey;autoIncrement"`
+	Username  string `json:"username" gorm:"column:username"`
+	Email     string `json:"email" gorm:"column:email"`
+	Password  string `json:"password" gorm:"column:password"`
+	Age       int    `json:"age" gorm:"column:age"`
+	CreatedAt string `json:"created_at" gorm:"column:created_at"`
+	UpdatedAt string `json:"updated_at" gorm:"column:updated_at"`
 }
 
 func Register(user User) User {

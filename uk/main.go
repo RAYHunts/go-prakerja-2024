@@ -9,7 +9,7 @@ import (
 
 func main() {
 	database.StartDB()
-	database.GetDB().AutoMigrate(&models.Product{})
+	database.GetDB().AutoMigrate(&models.Photo{})
 	database.GetDB().AutoMigrate(&models.User{})
 	routers.StartServer().Run(":8080")
 }

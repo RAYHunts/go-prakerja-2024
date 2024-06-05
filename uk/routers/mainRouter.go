@@ -10,25 +10,16 @@ import (
 func StartServer() *gin.Engine {
 	r := gin.New()
 
-	// r.GET("/products", controllers.GetProducts)
-	// r.GET("/products/:id", controllers.GetProduct)
-	// r.POST("/products", controllers.CreateProduct)
-	// r.PUT("/products/:id", controllers.UpdateProduct)
-	// r.DELETE("/products/:id", controllers.DeleteProduct)
-
 	r.POST("/login", controllers.Login)
 	r.POST("/register", controllers.Register)
 	r.GET("/users", controllers.GetUsers)
 
-	productGroup := r.Group("/products")
+	photoGroup := r.Group("/photos")
 	{
-		productGroup.Use(middleware.Auth())
-		productGroup.GET("/", controllers.GetProducts)
-		productGroup.GET("/:id", controllers.GetProduct)
-		productGroup.POST("/", controllers.CreateProduct)
-		productGroup.PUT("/:id", controllers.UpdateProduct)
-		productGroup.DELETE("/:id", controllers.DeleteProduct)
+		photoGroup.POST("/", middleware.Auth(), controllers.UploadPhoto)
 	}
+
+
 
 	return r
 }
